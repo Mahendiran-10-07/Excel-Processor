@@ -1,0 +1,79 @@
+<html>
+<head>
+    <title>Excel Processor</title>
+    <style>
+        body { font-family: sans-serif; margin: 2em; }
+        .form-container { border: 1px solid #ccc; padding: 20px; margin-bottom: 20px; }
+        .results-container { margin-top: 20px; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .flash { padding: 10px; margin-bottom: 10px; border: 1px solid; }
+        .flash.error { background-color: #f8d7da; color: #721c24; border-color: #f5c6cb; }
+    </style>
+</head>
+<body>
+    <h1>Excel File Processor</h1>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="flash error">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="form-container">
+        <form action="/" method="post" enctype="multipart/form-data">
+            
+            <div>
+                <label for="file">Upload .xlsx file:</label><br>
+                <input type="file" name="file" id="file" accept=".xlsx" required>
+            </div>
+            <br>
+
+            <div>
+                <label>Choose sheet to process:</label><br>
+                <input type="radio" name="sheet_choice" value="Sheet1" id="sheet1" checked>
+                <label for="sheet1">Sheet 1</label>
+                <br>
+                <input type="radio" name="sheet_choice" value="Sheet2" id="sheet2">
+                <label for="sheet2">Sheet 2</label>
+            </div>
+            <br>
+            
+            <button type="submit">Process File</button>
+        </form>
+    </div>
+
+
+    {% if data %}
+    <div class="results-container">
+        <h2>Processed Data</h2>
+        <a href="/download">
+            <button>Download as Excel File</button>
+        </a>
+        <br><br>
+        <table>
+            <thead>
+                <tr>
+                    {% for header in headers %}
+                        <th>{{ header }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in data %}
+                <tr>
+                    {% for header in headers %}
+                        <td>{{ row[header] }}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+</body>
+</html>
